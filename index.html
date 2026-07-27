@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT Racecar Neo - Simulator Only</title>
+    
+    <!-- Cross-Origin Isolation for Unity WebGL SharedArrayBuffer support on GitHub Pages -->
+    <script src="coi-serviceworker.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background: #000; 
+            width: 100vw; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-family: sans-serif;
+        }
+        #unity-container { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+        }
+        #unity-canvas { 
+            width: 100%; 
+            height: 100%; 
+            background: #231F20; 
+            display: block;
+        }
+        .status-badge {
+            background: rgba(0,0,0,0.5); 
+            color: white; 
+            padding: 5px 10px; 
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="unity-container">
+        <!-- Loading Screen -->
+        <div id="unity-loading-bar" style="position: absolute; inset: 0; background: rgba(15, 17, 23, 0.92); backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; padding: 2rem;">
+            <div style="font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                <span class="loading-spinner" style="display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#3b82f6; border-radius:50%; animation: spin 1s linear infinite;"></span>
+                <span>Loading Simulator</span>
+            </div>
+            <div style="width: 80%; max-width: 380px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.15);">
+                <div id="unity-progress-bar-full" style="width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 6px; transition: width 0.2s ease;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; width: 80%; max-width: 380px; margin-top: 10px; font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+                <span id="unity-loading-text">Downloading WebGL engine & assets...</span>
+                <span id="unity-loading-percent" style="font-weight: 600; color: #60a5fa;">0%</span>
+            </div>
+        </div>
+        
+        <!-- Status Badge -->
+        <div class="sim-overlay-badges" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+            <span id="unity-status" class="status-badge">Loading...</span>
+        </div>
+        
+        <!-- Unity WebGL Canvas -->
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+    </div>
+
+    <script>
+        window.unityInstance = null;
+        var buildUrl = "Build";
+        var config = {
+            dataUrl: buildUrl + "/frontend.data",
+            frameworkUrl: buildUrl + "/frontend.framework.js",
+            codeUrl: buildUrl + "/frontend.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "MIT Beaver Works",
+            productName: "RacecarSim",
+            productVersion: "2.8.3",
+            showBanner: function (msg, type) {
+                if (type === "error") console.error("[Unity Banner]", msg);
+                else if (type === "warning") console.warn("[Unity Banner]", msg);
+                else console.log("[Unity Banner]", msg);
+            }
+        };
+
+        const loadUnity = () => {
+            const unityStatus = document.querySelector("#unity-status");
+            const loadingBar = document.querySelector("#unity-loading-bar");
+            const progressBarFull = document.querySelector("#unity-progress-bar-full");
+            const loadingText = document.querySelector("#unity-loading-text");
+            const loadingPercent = document.querySelector("#unity-loading-percent");
+            const canvas = document.querySelector("#unity-canvas");
+
+            if (window.location.protocol === "file:") {
+                if (loadingBar) loadingBar.style.display = "none";
+                unityStatus.textContent = "Needs Server";
+                const msg = document.createElement("div");
+                msg.style.cssText = "position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);color:#fff;font-family:inherit;padding:1rem;text-align:center;border-radius:8px;z-index:10;";
+                msg.innerHTML = "<span style='font-size:2rem'>⚠️</span><br><strong>Simulator unavailable over file://</strong><br><br>Unity WebGL requires <code>SharedArrayBuffer</code>, which browsers only allow when the page is served with COOP/COEP headers from a web server.<br><br>Run <code>python -m http.server 8000</code> in this folder and open <a href='http://localhost:8000' style='color:#7eb8f7'>localhost:8000</a> instead.";
+                canvas.parentElement.style.position = "relative";
+                canvas.parentElement.appendChild(msg);
+                return;
+            }
+
+            const startUnity = () => {
+                var savedDefine = window.define;
+                var savedDefineAmd = savedDefine && savedDefine.amd;
+                try {
+                    delete window.define;
+                } catch (e) {
+                    try { window.define = undefined; } catch (e2) { }
+                }
+
+                createUnityInstance(canvas, config, (progress) => {
+                    const pct = Math.round(progress * 100);
+                    if (progressBarFull) progressBarFull.style.width = pct + "%";
+                    if (loadingPercent) loadingPercent.textContent = pct + "%";
+                    if (loadingText) {
+                        if (pct < 90) loadingText.textContent = "Downloading WebGL engine & assets...";
+                        else if (pct < 100) loadingText.textContent = "Initializing WebAssembly engine...";
+                        else loadingText.textContent = "Launching Simulator...";
+                    }
+                }).then((instance) => {
+                    if (savedDefine) {
+                        window.define = savedDefine;
+                        if (savedDefineAmd) window.define.amd = savedDefineAmd;
+                    }
+                    window.unityInstance = instance;
+                    if (loadingBar) loadingBar.style.display = "none";
+                    unityStatus.textContent = "Simulator Ready";
+                    unityStatus.style.background = "rgba(0, 128, 0, 0.5)";
+                }).catch((err) => {
+                    console.error("Failed to load Unity Instance:", err);
+                    if (loadingText) loadingText.textContent = "Failed to launch WebGL simulator: " + (err.message || err);
+                    if (loadingPercent) loadingPercent.textContent = "Error";
+                    unityStatus.textContent = "Failed Load";
+                    unityStatus.style.background = "rgba(255, 0, 0, 0.5)";
+                });
+            };
+
+            var script = document.createElement("script");
+            script.src = buildUrl + "/frontend.loader.js";
+            script.onload = startUnity;
+            document.body.appendChild(script);
+        };
+        
+        // Auto load unity when page loads
+        window.addEventListener('load', loadUnity);
+    </script>
+</body>
+</html>
