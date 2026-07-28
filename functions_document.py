@@ -1,4 +1,4 @@
-"""
+﻿"""
 MIT BWSI Autonomous RACECAR
 MIT License
 racecar-neo-prereq-labs
@@ -22,15 +22,11 @@ import cv2 as cv
 import numpy as np
 
 
-try:
-    sys.path.insert(0, '../library')
-    import racecar_core
-    import racecar_utils as rc_utils
-
-except:
-    sys.path.insert(1, '../../library')
-    import racecar_core
-    import racecar_utils as rc_utils
+# If this file is nested inside a folder in the labs folder, the relative path should
+# be [1, ../../library] instead.
+sys.path.insert(0, '../library')
+import racecar_core
+import racecar_utils as rc_utils
 
 
 # Load dictionary and parameters from the aruco library
@@ -540,7 +536,6 @@ def movement_record():
 def time():
     global time_abs
     time_abs += rc.get_delta_time()
-    print(time_abs)
 
 
 # [FUNCTION] The start function is run once every time the start button is pressed

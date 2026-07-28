@@ -7,6 +7,8 @@
     
     <!-- Cross-Origin Isolation for Unity WebGL SharedArrayBuffer support on GitHub Pages -->
     <script src="coi-serviceworker.js"></script>
+    <!-- Load Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <style>
         body { 
             margin: 0; 
@@ -84,6 +86,171 @@
             }
         };
 
+        // --- Python/Unity Bridge Functions ---
+        let activeRacecar = null;
+        let isUnityConnected = false;
+
+        function sendConnectToUnity() {
+            if (window.unityInstance && isUnityConnected) {
+                const buffer = new ArrayBuffer(1);
+                new DataView(buffer).setUint8(0, 1); // 1 = Header.connect
+                const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+                try { window.unityInstance.SendMessage('BrowserMessageReceiver', 'ReceiveFromJS', base64); } catch(e){}
+            }
+        }
+
+        function sendFinishedToUnity(isSlow) {
+            if (window.unityInstance && isUnityConnected) {
+                const buffer = new ArrayBuffer(1);
+                new DataView(buffer).setUint8(0, isSlow ? 6 : 5); // 5 = update_finished, 6 = slow_update_finished
+                const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+                try { window.unityInstance.SendMessage('BrowserMessageReceiver', 'ReceiveFromJS', base64); } catch(e){}
+            }
+        }
+
+        function sendErrorToUnity(errorMsg) {
+            if (window.unityInstance && isUnityConnected) {
+                try { window.unityInstance.SendMessage('BrowserMessageReceiver', 'ReceiveError', errorMsg); } catch(e){}
+            }
+        }
+
+        window.unityRegisterRacecar = function (racecar) {
+            activeRacecar = racecar;
+            try { window._rc_startFunc = racecar._start_func || null; } catch (e) { window._rc_startFunc = null; }
+            try { window._rc_updateFunc = racecar._update_func || null; } catch (e) { window._rc_updateFunc = null; }
+            try { window._rc_updateSlowFunc = racecar._update_slow_func || null; } catch (e) { window._rc_updateSlowFunc = null; }
+            
+            window.isPythonRunning = true;
+            if (isUnityConnected) {
+                sendConnectToUnity();
+            }
+            console.log("Racecar registered successfully.");
+        };
+
+        window.unityToPython = function (bytes) {
+            if (!activeRacecar) return;
+            const header = bytes[0];
+
+            if (!isUnityConnected) {
+                isUnityConnected = true;
+                sendConnectToUnity();
+            }
+
+            try {
+                if (header === 2) { // unity_start
+                    if (window._rc_startFunc) window._rc_startFunc();
+                    sendFinishedToUnity(false);
+                } else if (header === 3) { // unity_update
+                    if (window._rc_updateFunc) window._rc_updateFunc();
+                    sendFinishedToUnity(false);
+                } else if (header === 4) { // unity_exit
+                    isUnityConnected = false;
+                }
+            } catch (err) {
+                console.error("[Python Loop Error]: " + err.message);
+                sendErrorToUnity(err.message);
+            }
+        };
+
+        window.unityToPythonAsync = function (bytes) {
+            console.log("Async packet from Unity: ", bytes);
+        };
+
+        // --- Keyboard Controller Mapping ---
+        const heldKeys = new Set();
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            heldKeys.add(e.code);
+            updateControllerState();
+        });
+        document.addEventListener('keyup', (e) => {
+            heldKeys.delete(e.code);
+            updateControllerState();
+        });
+
+        function updateControllerState() {
+            let downMask = 0;
+            // 1=forward(A), 2=backward(B), 3=left(X), 4=right(Y)
+            if (heldKeys.has('Digit1') || heldKeys.has('Numpad1')) downMask |= (1 << 0); // Button.A
+            if (heldKeys.has('Digit2') || heldKeys.has('Numpad2')) downMask |= (1 << 1); // Button.B
+            if (heldKeys.has('Digit3') || heldKeys.has('Numpad3')) downMask |= (1 << 2); // Button.X
+            if (heldKeys.has('Digit4') || heldKeys.has('Numpad4')) downMask |= (1 << 3); // Button.Y
+            
+            window.racecarState = window.racecarState || {};
+            const uc = window.racecarState._unityController || { down: 0, pressed: 0, released: 0, tl: 0, tr: 0, jlx: 0, jly: 0, jrx: 0, jry: 0 };
+            
+            window.racecarState.controller = { 
+                down: downMask | uc.down, 
+                pressed: uc.pressed, 
+                released: uc.released, 
+                tl: uc.tl, 
+                tr: uc.tr, 
+                jlx: uc.jlx, 
+                jly: uc.jly, 
+                jrx: uc.jrx, 
+                jry: uc.jry 
+            };
+        }
+
+        // --- Hardware State & Drive Bridge ---
+        window.racecarState = window.racecarState || {};
+        window.racecarState.accel = { to_py: () => [0, 0, 0] };
+        window.racecarState.gyro = { to_py: () => [0, 0, 0] };
+
+        window.unityPushLidar = function (samplesFloat32) {
+            window.racecarState = window.racecarState || {};
+            window.racecarState.lidar = { to_py: () => samplesFloat32 };
+        };
+
+        window.unityPushCamera = function (pixelsUint8, w, h) {
+            window.racecarState = window.racecarState || {};
+            window.racecarState.camera = { to_py: () => pixelsUint8, w: w, h: h };
+        };
+
+        window.unityPushController = function (down, pressed, released, tl, tr, jlx, jly, jrx, jry) {
+            window.racecarState = window.racecarState || {};
+            window.racecarState._unityController = { down, pressed, released, tl, tr, jlx, jly, jrx, jry };
+            updateControllerState();
+        };
+
+        window.unitySetDrive = function (speed, angle) {
+            if (!window.unityInstance || !isUnityConnected) return;
+            const buffer = new ArrayBuffer(12);
+            const view = new DataView(buffer);
+            view.setUint8(0, 22); // Header index
+            view.setFloat32(4, speed, true);
+            view.setFloat32(8, angle, true);
+            const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+            try {
+                window.unityInstance.SendMessage('BrowserMessageReceiver', 'ReceiveFromJS', base64);
+            } catch(e) {}
+        };
+
+        window.unityStopDrive = function () {
+            if (!window.unityInstance || !isUnityConnected) return;
+            const buffer = new ArrayBuffer(1);
+            const view = new DataView(buffer);
+            view.setUint8(0, 23); // Header.drive_stop
+            const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+            try {
+                window.unityInstance.SendMessage('BrowserMessageReceiver', 'ReceiveFromJS', base64);
+            } catch(e) {}
+        };
+
+        window.unitySetMaxSpeed = function (speed) {
+            if (!window.unityInstance || !isUnityConnected) return;
+            const buffer = new ArrayBuffer(8);
+            const view = new DataView(buffer);
+            view.setUint8(0, 24); // Header.drive_set_max_speed
+            view.setFloat32(4, speed, true);
+            const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+            try {
+                window.unityInstance.SendMessage('BrowserMessageReceiver', 'ReceiveFromJS', base64);
+            } catch(e) {}
+        };
+        // -------------------------------------
+        // -------------------------------------
+
         const loadUnity = () => {
             const unityStatus = document.querySelector("#unity-status");
             const loadingBar = document.querySelector("#unity-loading-bar");
@@ -130,6 +297,37 @@
                     if (loadingBar) loadingBar.style.display = "none";
                     unityStatus.textContent = "Simulator Ready";
                     unityStatus.style.background = "rgba(0, 128, 0, 0.5)";
+                    
+                    // Headless Pyodide Runner
+                    (async function() {
+                        try {
+                            unityStatus.textContent = "Starting Python...";
+                            let pyodide = await loadPyodide();
+                            
+                            unityStatus.textContent = "Loading packages (numpy, cv2)...";
+                            await pyodide.loadPackage(['numpy', 'opencv-python']);
+                            
+                            unityStatus.textContent = "Fetching Python scripts...";
+                            const coreCode = await fetch('racecar_core.py').then(r => r.text());
+                            const utilsCode = await fetch('racecar_utils.py').then(r => r.text());
+                            const userCode = await fetch('functions_document.py').then(r => r.text());
+                            
+                            pyodide.FS.writeFile('/home/pyodide/racecar_core.py', coreCode);
+                            pyodide.FS.writeFile('/home/pyodide/racecar_utils.py', utilsCode);
+                            pyodide.FS.writeFile('/home/pyodide/functions_document.py', userCode);
+                            
+                            unityStatus.textContent = "Executing Python script...";
+                            pyodide.runPython(userCode);
+                            
+                            unityStatus.textContent = "Python Running";
+                            unityStatus.style.background = "rgba(0, 0, 255, 0.5)";
+                        } catch (err) {
+                            console.error("Python Execution Error: ", err);
+                            unityStatus.textContent = "Python Error (Check Console)";
+                            unityStatus.style.background = "rgba(255, 0, 0, 0.5)";
+                        }
+                    })();
+
                 }).catch((err) => {
                     console.error("Failed to load Unity Instance:", err);
                     if (loadingText) loadingText.textContent = "Failed to launch WebGL simulator: " + (err.message || err);
