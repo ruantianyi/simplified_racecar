@@ -1,0 +1,291 @@
+FLAGS=
+[0.02s info] calling createUnityInstance; typeof createUnityInstance=function; SAB=function; isolated=true
+[0.33s progress] 0%
+[0.47s progress] 10%
+[0.51s progress] 20%
+[0.56s progress] 30%
+[0.59s progress] 40%
+[0.64s progress] 50%
+[0.68s progress] 60%
+[0.69s progress] 70%
+[0.70s progress] 80%
+[0.72s progress] 90%
+[0.72s log] navigator.mediaDevices support available
+[0.73s log] [UnityMemory] Configuration Parameters - Can be set up in boot.config
+
+[0.73s log]     "memorysetup-allocator-temp-initial-block-size-main=262144"
+
+[0.73s log]     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+
+[0.73s log]     "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+
+[0.73s log]     "memorysetup-temp-allocator-size-audio-worker=65536"
+
+[0.73s log]     "memorysetup-temp-allocator-size-cloud-worker=32768"
+
+[0.73s log]     "memorysetup-temp-allocator-size-background-worker=32768"
+
+[0.73s log]     "memorysetup-bucket-allocator-granularity=16"
+
+[0.73s log]     "memorysetup-bucket-allocator-bucket-count=8"
+
+[0.73s log]     "memorysetup-bucket-allocator-block-size=4194304"
+
+[0.73s log]     "memorysetup-bucket-allocator-block-count=1"
+
+[0.73s log]     "memorysetup-main-allocator-block-size=16777216"
+
+[0.73s log]     "memorysetup-thread-allocator-block-size=16777216"
+
+[0.73s log]     "memorysetup-gfx-main-allocator-block-size=16777216"
+
+[0.73s log]     "memorysetup-gfx-thread-allocator-block-size=16777216"
+
+[0.73s log]     "memorysetup-cache-allocator-block-size=4194304"
+
+[0.73s log]     "memorysetup-typetree-allocator-block-size=2097152"
+
+[0.73s log]     "memorysetup-profiler-bucket-allocator-granularity=16"
+
+[0.73s log]     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+
+[0.73s log]     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+
+[0.73s log]     "memorysetup-profiler-bucket-allocator-block-count=1"
+
+[0.73s log]     "memorysetup-profiler-allocator-block-size=16777216"
+
+[0.73s log]     "memorysetup-profiler-editor-allocator-block-size=1048576"
+
+[0.73s log]     "memorysetup-temp-allocator-size-main=4194304"
+
+[0.73s log]     "memorysetup-job-temp-allocator-block-size=2097152"
+
+[0.73s log]     "memorysetup-job-temp-allocator-block-size-background=1048576"
+
+[0.73s log]     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+
+[0.79s log] Input System module state changed to: Initialized.
+
+[0.79s log] [PhysX] Initialized SinglethreadedTaskDispatcher.
+
+[0.80s log] Loading player data from data.unity3d
+
+[0.81s log] Initialize engine version: 2022.3.62f2 (7670c08855a9)
+
+[0.81s log] [Subsystems] Discovering subsystems at path UnitySubsystems
+
+[0.81s log] Creating WebGL 2.0 context.
+[0.87s log] Renderer: WebKit WebGL
+
+[0.87s log] Vendor:   WebKit
+
+[0.87s log] Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))
+
+[0.87s log] GLES:     3
+
+[0.87s log]  EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_mirror_clamp_to_edge NV_shader_noperspective_interpolation OES_draw_buffers_indexed OES_sample_variables OES_shader_multisample_interpolation OES_texture_float_linear OVR_multiview2 WEBGL_clip_cull_distance WEBGL_compressed_texture_astc WEBGL_compressed_texture_etc WEBGL_compressed_texture_etc1 WEBGL_compressed_texture_s3tc WEBGL_compressed_texture_s3tc_srgb WEBGL_debug_renderer_info WEBGL_debug_shaders WEBGL_lose_context WEBGL_multi_draw WEBGL_polygon_mode WEBGL_stencil_texturing GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_depth_clamp GL_EXT_disjoint_timer_query_webgl2 GL_EXT_float_blend GL_EXT_polygon_offset_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_comp
+
+[0.87s log] ression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_mirror_clamp_to_edge GL_NV_shader_noperspective_interpolation GL_OES_draw_buffers_indexed GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_texture_float_linear GL_OVR_multiview2 GL_WEBGL_clip_cull_distance GL_WEBGL_compressed_texture_astc GL_WEBGL_compressed_texture_etc GL_WEBGL_compressed_texture_etc1 GL_WEBGL_compressed_texture_s3tc GL_WEBGL_compressed_texture_s3tc_srgb GL_WEBGL_debug_renderer_info GL_WEBGL_debug_shaders GL_WEBGL_lose_context GL_WEBGL_multi_draw GL_WEBGL_polygon_mode GL_WEBGL_stencil_texturing
+
+[0.89s log] OPENGL LOG: Creating OpenGL ES 3.0 graphics device ; Context level  <OpenGL ES 3.0> ; Context handle 1
+
+[1.06s log] Input Manager initialize...
+
+[1.13s log] [PhysX] Initialized SinglethreadedTaskDispatcher.
+
+[1.13s log] UnloadTime: 20.194999 ms
+
+[1.14s warn] Manual synchronization of Unity Application.persistentDataPath via JS_FileSystem_Sync() is deprecated and will be later removed in a future Unity version. The persistent data directory will be automatically synchronized instead on file modification. Pass config.autoSyncPersistentDataPath = true; to configuration in createUnityInstance() to opt in to the new behavior.
+[1.19s progress] 100%
+[1.19s info] UNITY INSTANCE READY
+[1.61s log] [UnityCache] 'http://127.0.0.1:8123/Build/frontend.data' successfully downloaded and stored in the indexedDB cache
+[9.19s flush] ready+8s
+[90.01s flush] timeout-90s
+PAGE=/_diag2.html
+[1.92s log] navigator.mediaDevices support available
+[1.96s log] [UnityMemory] Configuration Parameters - Can be set up in boot.config
+
+[1.96s log]     "memorysetup-allocator-temp-initial-block-size-main=262144"
+
+[1.96s log]     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+
+[1.96s log]     "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+
+[1.96s log]     "memorysetup-temp-allocator-size-audio-worker=65536"
+
+[1.96s log]     "memorysetup-temp-allocator-size-cloud-worker=32768"
+
+[1.96s log]     "memorysetup-temp-allocator-size-background-worker=32768"
+
+[1.96s log]     "memorysetup-bucket-allocator-granularity=16"
+
+[1.96s log]     "memorysetup-bucket-allocator-bucket-count=8"
+
+[1.96s log]     "memorysetup-bucket-allocator-block-size=4194304"
+
+[1.96s log]     "memorysetup-bucket-allocator-block-count=1"
+
+[1.96s log]     "memorysetup-main-allocator-block-size=16777216"
+
+[1.96s log]     "memorysetup-thread-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-gfx-main-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-gfx-thread-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-cache-allocator-block-size=4194304"
+
+[1.97s log]     "memorysetup-typetree-allocator-block-size=2097152"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-granularity=16"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-block-count=1"
+
+[1.97s log]     "memorysetup-profiler-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-profiler-editor-allocator-block-size=1048576"
+
+[1.97s log]     "memorysetup-temp-allocator-size-main=4194304"
+
+[1.97s log]     "memorysetup-job-temp-allocator-block-size=2097152"
+
+[1.97s log]     "memorysetup-job-temp-allocator-block-size-background=1048576"
+
+[1.97s log]     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+
+[2.24s log] Input System module state changed to: Initialized.
+
+[2.25s log] [PhysX] Initialized SinglethreadedTaskDispatcher.
+
+[2.26s log] Loading player data from data.unity3d
+
+[2.27s log] Initialize engine version: 2022.3.62f2 (7670c08855a9)
+
+[2.27s log] [Subsystems] Discovering subsystems at path UnitySubsystems
+
+[2.27s log] Creating WebGL 2.0 context.
+[4.89s log] Renderer: WebKit WebGL
+
+[4.89s log] Vendor:   WebKit
+
+[4.89s log] Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))
+
+[4.89s log] GLES:     3
+
+[4.89s log]  EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_mirror_clamp_to_edge NV_shader_noperspective_interpolation OES_draw_buffers_indexed OES_sample_variables OES_shader_multisample_interpolation OES_texture_float_linear OVR_multiview2 WEBGL_clip_cull_distance WEBGL_compressed_texture_astc WEBGL_compressed_texture_etc WEBGL_compressed_texture_etc1 WEBGL_compressed_texture_s3tc WEBGL_compressed_texture_s3tc_srgb WEBGL_debug_renderer_info WEBGL_debug_shaders WEBGL_lose_context WEBGL_multi_draw WEBGL_polygon_mode WEBGL_stencil_texturing GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_depth_clamp GL_EXT_disjoint_timer_query_webgl2 GL_EXT_float_blend GL_EXT_polygon_offset_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_comp
+
+[4.89s log] ression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_mirror_clamp_to_edge GL_NV_shader_noperspective_interpolation GL_OES_draw_buffers_indexed GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_texture_float_linear GL_OVR_multiview2 GL_WEBGL_clip_cull_distance GL_WEBGL_compressed_texture_astc GL_WEBGL_compressed_texture_etc GL_WEBGL_compressed_texture_etc1 GL_WEBGL_compressed_texture_s3tc GL_WEBGL_compressed_texture_s3tc_srgb GL_WEBGL_debug_renderer_info GL_WEBGL_debug_shaders GL_WEBGL_lose_context GL_WEBGL_multi_draw GL_WEBGL_polygon_mode GL_WEBGL_stencil_texturing
+
+[6.97s log] OPENGL LOG: Creating OpenGL ES 3.0 graphics device ; Context level  <OpenGL ES 3.0> ; Context handle 1
+
+[7.57s log] Input Manager initialize...
+
+[7.85s log] [PhysX] Initialized SinglethreadedTaskDispatcher.
+
+[7.85s log] UnloadTime: 66.510001 ms
+
+[7.85s warn] Manual synchronization of Unity Application.persistentDataPath via JS_FileSystem_Sync() is deprecated and will be later removed in a future Unity version. The persistent data directory will be automatically synchronized instead on file modification. Pass config.autoSyncPersistentDataPath = true; to configuration in createUnityInstance() to opt in to the new behavior.
+[11.14s log] Loading numpy, opencv-python
+[13.68s log] [UnityCache] 'http://127.0.0.1:8123/Build/frontend.data' successfully downloaded and stored in the indexedDB cache
+[14.47s log] Loaded numpy, opencv-python
+[15.76s log] Racecar registered successfully.
+[45.01s flush] t+45s
+PAGE=/_diag2.html
+[1.92s log] navigator.mediaDevices support available
+[1.96s log] [UnityMemory] Configuration Parameters - Can be set up in boot.config
+
+[1.96s log]     "memorysetup-allocator-temp-initial-block-size-main=262144"
+
+[1.96s log]     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+
+[1.96s log]     "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+
+[1.96s log]     "memorysetup-temp-allocator-size-audio-worker=65536"
+
+[1.96s log]     "memorysetup-temp-allocator-size-cloud-worker=32768"
+
+[1.96s log]     "memorysetup-temp-allocator-size-background-worker=32768"
+
+[1.96s log]     "memorysetup-bucket-allocator-granularity=16"
+
+[1.96s log]     "memorysetup-bucket-allocator-bucket-count=8"
+
+[1.96s log]     "memorysetup-bucket-allocator-block-size=4194304"
+
+[1.96s log]     "memorysetup-bucket-allocator-block-count=1"
+
+[1.96s log]     "memorysetup-main-allocator-block-size=16777216"
+
+[1.96s log]     "memorysetup-thread-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-gfx-main-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-gfx-thread-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-cache-allocator-block-size=4194304"
+
+[1.97s log]     "memorysetup-typetree-allocator-block-size=2097152"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-granularity=16"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+
+[1.97s log]     "memorysetup-profiler-bucket-allocator-block-count=1"
+
+[1.97s log]     "memorysetup-profiler-allocator-block-size=16777216"
+
+[1.97s log]     "memorysetup-profiler-editor-allocator-block-size=1048576"
+
+[1.97s log]     "memorysetup-temp-allocator-size-main=4194304"
+
+[1.97s log]     "memorysetup-job-temp-allocator-block-size=2097152"
+
+[1.97s log]     "memorysetup-job-temp-allocator-block-size-background=1048576"
+
+[1.97s log]     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+
+[2.24s log] Input System module state changed to: Initialized.
+
+[2.25s log] [PhysX] Initialized SinglethreadedTaskDispatcher.
+
+[2.26s log] Loading player data from data.unity3d
+
+[2.27s log] Initialize engine version: 2022.3.62f2 (7670c08855a9)
+
+[2.27s log] [Subsystems] Discovering subsystems at path UnitySubsystems
+
+[2.27s log] Creating WebGL 2.0 context.
+[4.89s log] Renderer: WebKit WebGL
+
+[4.89s log] Vendor:   WebKit
+
+[4.89s log] Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))
+
+[4.89s log] GLES:     3
+
+[4.89s log]  EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_mirror_clamp_to_edge NV_shader_noperspective_interpolation OES_draw_buffers_indexed OES_sample_variables OES_shader_multisample_interpolation OES_texture_float_linear OVR_multiview2 WEBGL_clip_cull_distance WEBGL_compressed_texture_astc WEBGL_compressed_texture_etc WEBGL_compressed_texture_etc1 WEBGL_compressed_texture_s3tc WEBGL_compressed_texture_s3tc_srgb WEBGL_debug_renderer_info WEBGL_debug_shaders WEBGL_lose_context WEBGL_multi_draw WEBGL_polygon_mode WEBGL_stencil_texturing GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_depth_clamp GL_EXT_disjoint_timer_query_webgl2 GL_EXT_float_blend GL_EXT_polygon_offset_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_comp
+
+[4.89s log] ression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_mirror_clamp_to_edge GL_NV_shader_noperspective_interpolation GL_OES_draw_buffers_indexed GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_texture_float_linear GL_OVR_multiview2 GL_WEBGL_clip_cull_distance GL_WEBGL_compressed_texture_astc GL_WEBGL_compressed_texture_etc GL_WEBGL_compressed_texture_etc1 GL_WEBGL_compressed_texture_s3tc GL_WEBGL_compressed_texture_s3tc_srgb GL_WEBGL_debug_renderer_info GL_WEBGL_debug_shaders GL_WEBGL_lose_context GL_WEBGL_multi_draw GL_WEBGL_polygon_mode GL_WEBGL_stencil_texturing
+
+[6.97s log] OPENGL LOG: Creating OpenGL ES 3.0 graphics device ; Context level  <OpenGL ES 3.0> ; Context handle 1
+
+[7.57s log] Input Manager initialize...
+
+[7.85s log] [PhysX] Initialized SinglethreadedTaskDispatcher.
+
+[7.85s log] UnloadTime: 66.510001 ms
+
+[7.85s warn] Manual synchronization of Unity Application.persistentDataPath via JS_FileSystem_Sync() is deprecated and will be later removed in a future Unity version. The persistent data directory will be automatically synchronized instead on file modification. Pass config.autoSyncPersistentDataPath = true; to configuration in createUnityInstance() to opt in to the new behavior.
+[11.14s log] Loading numpy, opencv-python
+[13.68s log] [UnityCache] 'http://127.0.0.1:8123/Build/frontend.data' successfully downloaded and stored in the indexedDB cache
+[14.47s log] Loaded numpy, opencv-python
+[15.76s log] Racecar registered successfully.
+[45.01s flush] t+45s
+[100.03s flush] t+100s
