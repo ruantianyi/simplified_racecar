@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIT Racecar Neo - Simulator Only</title>
 
-    <!-- Cross-Origin Isolation for Unity WebGL SharedArrayBuffer support on GitHub Pages -->
-    <script src="coi-serviceworker.js"></script>
+    <!-- NOTE: coi-serviceworker.js is deliberately NOT loaded. This build uses no threads and
+         never touches SharedArrayBuffer (verified: 0 pthread/SAB references in frontend.framework.js;
+         the only SAB mention in the loader is browser-capability telemetry), so cross-origin
+         isolation buys nothing here. What it did cost: a forced page reload plus a service worker
+         proxying every Build/* fetch, which can hand Unity a stale frontend.data/.wasm.
+         See unregisterStaleServiceWorkers() below, which cleans up any already-registered copy. -->
     <!-- Load Pyodide -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <style>
@@ -86,6 +90,14 @@
             companyName: "MIT Beaver Works",
             productName: "RacecarSim",
             productVersion: "2.8.3",
+            // Unity otherwise stashes frontend.data (76 MB) and frontend.wasm in an IndexedDB
+            // "UnityCache" keyed by companyName/productName/productVersion. Those never change
+            // between rebuilds, so a rebuilt player silently reuses the previous build's cached
+            // data alongside the new .wasm. The mismatch does not fail cleanly -- IL2CPP runs
+            // against the wrong metadata and dies as "RangeError: Maximum call stack size
+            // exceeded" inside invoke_iii. Always fetch from the network; the browser's normal
+            // HTTP cache (ETag/Last-Modified) still avoids re-downloading unchanged files.
+            cacheControl: function () { return "no-store"; },
             showBanner: function (msg, type) {
                 if (type === "error") console.error("[Unity Banner]", msg);
                 else if (type === "warning") console.warn("[Unity Banner]", msg);
@@ -424,6 +436,35 @@ with open(${safePath}, "r") as _f:
             }
         }
 
+        // A previously-registered coi-serviceworker still controls this page and keeps serving
+        // Build/* from its own cache, so unregistering is not enough on its own -- the page has to
+        // reload once to escape the controller. Guarded by sessionStorage so it can only happen once.
+        const RELOAD_FLAG = "sw-cleanup-reloaded";
+        async function unregisterStaleServiceWorkers() {
+            if (!navigator.serviceWorker) return false;
+            let regs = [];
+            try { regs = await navigator.serviceWorker.getRegistrations(); } catch (e) { return false; }
+            if (!regs.length) return false;
+            await Promise.all(regs.map(r => r.unregister().catch(() => {})));
+            if (navigator.serviceWorker.controller && !sessionStorage.getItem(RELOAD_FLAG)) {
+                sessionStorage.setItem(RELOAD_FLAG, "1");
+                location.reload();
+                return true; // page is going away; do not start Unity
+            }
+            return false;
+        }
+
+        // Drop any UnityCache left over from before cacheControl:"no-store" was set.
+        async function deleteStaleUnityCache() {
+            if (!window.indexedDB) return;
+            await new Promise((resolve) => {
+                let req;
+                try { req = indexedDB.deleteDatabase("UnityCache"); } catch (e) { return resolve(); }
+                req.onsuccess = req.onerror = req.onblocked = () => resolve();
+                setTimeout(resolve, 3000); // never let a blocked delete stall the loader
+            });
+        }
+
         const loadUnity = () => {
             const unityStatus = document.querySelector("#unity-status");
             const loadingBar = document.querySelector("#unity-loading-bar");
@@ -475,7 +516,15 @@ with open(${safePath}, "r") as _f:
 
                 }).catch((err) => {
                     console.error("Failed to load Unity Instance:", err);
-                    if (loadingText) loadingText.textContent = "Failed to launch WebGL simulator: " + (err.message || err);
+                    const raw = String(err && err.message || err);
+                    // A stack overflow in wasm means the engine ran but executed garbage: almost
+                    // always mismatched build artifacts rather than a bug in the page.
+                    const hint = /Maximum call stack size exceeded/i.test(raw)
+                        ? "\n\nThis usually means mismatched Unity build artifacts (a cached " +
+                          "frontend.data paired with a different frontend.wasm). Open DevTools -> " +
+                          "Application -> Storage -> 'Clear site data', then reload."
+                        : "";
+                    if (loadingText) loadingText.textContent = "Failed to launch WebGL simulator: " + raw + hint;
                     if (loadingPercent) loadingPercent.textContent = "Error";
                     unityStatus.textContent = "Failed Load";
                     unityStatus.style.background = "rgba(255, 0, 0, 0.5)";
@@ -488,8 +537,16 @@ with open(${safePath}, "r") as _f:
             document.body.appendChild(script);
         };
 
-        // Auto load unity when page loads
-        window.addEventListener('load', loadUnity);
+        // Auto load unity when page loads, after clearing caches that can feed it a stale build
+        window.addEventListener('load', async () => {
+            try {
+                if (await unregisterStaleServiceWorkers()) return; // reloading
+                await deleteStaleUnityCache();
+            } catch (e) {
+                console.warn("Cache cleanup failed, loading anyway:", e);
+            }
+            loadUnity();
+        });
     </script>
 </body>
 </html>
