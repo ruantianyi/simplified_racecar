@@ -478,7 +478,7 @@ with open(${safePath}, "r") as _f:
                 unityStatus.textContent = "Needs Server";
                 const msg = document.createElement("div");
                 msg.style.cssText = "position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);color:#fff;font-family:inherit;padding:1rem;text-align:center;border-radius:8px;z-index:10;";
-                msg.innerHTML = "<span style='font-size:2rem'>⚠️</span><br><strong>Simulator unavailable over file://</strong><br><br>Unity WebGL requires <code>SharedArrayBuffer</code>, which browsers only allow when the page is served with COOP/COEP headers from a web server.<br><br>Run <code>python server.py</code> in this folder and open <a href='http://localhost:8000' style='color:#7eb8f7'>localhost:8000</a> instead.";
+                msg.innerHTML = "<span style='font-size:2rem'>⚠️</span><br><strong>Simulator unavailable over file://</strong><br><br>The Unity loader fetches <code>Build/frontend.data</code> and <code>frontend.wasm</code> over HTTP, and browsers block those requests from <code>file://</code> origins.<br><br>Run <code>python server.py</code> in this folder and open <a href='http://localhost:8000' style='color:#7eb8f7'>localhost:8000</a> instead.";
                 canvas.parentElement.style.position = "relative";
                 canvas.parentElement.appendChild(msg);
                 return;
