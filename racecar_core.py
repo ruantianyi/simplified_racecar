@@ -23,7 +23,7 @@ class Camera:
         if not hasattr(js.window, "racecarState") or not hasattr(js.window.racecarState, "camera"):
             return np.zeros((480, 640, 3), dtype=np.uint8)
         cam = js.window.racecarState.camera
-        arr = np.asarray(cam.pixels.to_py(), dtype=np.uint8)
+        arr = np.asarray(cam.to_py(), dtype=np.uint8)
         # Unity's Color32 array is RGBA. OpenCV uses BGR.
         arr = arr.reshape((cam.h, cam.w, 4))
         # Convert RGBA to BGR
@@ -105,6 +105,7 @@ class Racecar:
         self.physics = Physics()
         self.controller = Controller()
         self.display = Display()
+        self._update_slow_time = 1.0
 
     def set_start_update(self, start_func, update_func, update_slow_func=None):
         self._start_func = start_func
@@ -116,7 +117,8 @@ class Racecar:
         js.window.unityRegisterRacecar(self._proxy)
 
     def set_update_slow_time(self, time):
-        pass
+        self._update_slow_time = float(time)
+        js.window._rc_updateSlowTime = self._update_slow_time
 
     def get_delta_time(self):
         return 1.0 / 60.0
