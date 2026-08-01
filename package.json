@@ -4,6 +4,7 @@
   "description": "��#\u0000 \u0000s\u0000i\u0000m\u0000p\u0000l\u0000i\u0000f\u0000i\u0000e\u0000d\u0000_\u0000r\u0000a\u0000c\u0000e\u0000c\u0000a\u0000r\u0000\r\u0000 \u0000",
   "main": "coi-serviceworker.js",
   "scripts": {
+    "dev": "npx serve .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,4 +20,5 @@
   },
   "homepage": "https://github.com/ruantianyi/simplified_racecar#readme"
 }
+
 
