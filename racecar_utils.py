@@ -9,8 +9,8 @@ File Name: racecar_utils.py
 File Description: Contains helper functions to support common operations.
 """
 
-import cv2 as cv
-import numpy as np
+import cv2 as cv  # type: ignore
+import numpy as np  # type: ignore
 from typing import Any, Optional
 class NDArray:  # stub - no runtime dependency on nptyping
     def __class_getitem__(cls, _): return cls

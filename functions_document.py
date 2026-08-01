@@ -1,4 +1,4 @@
-﻿"""
+"""
 MIT BWSI Autonomous RACECAR
 MIT License
 racecar-neo-prereq-labs
@@ -17,9 +17,9 @@ Purpose: A document of all of the different functions I have written
 ########################################################################################
 
 import sys
-import cv2
-import cv2 as cv
-import numpy as np
+import cv2  # type: ignore
+import cv2 as cv  # type: ignore
+import numpy as np  # type: ignore
 
 
 # If this file is nested inside a folder in the labs folder, the relative path should

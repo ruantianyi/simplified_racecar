@@ -1,6 +1,6 @@
-import js
-import numpy as np
-from pyodide.ffi import create_proxy
+import js  # type: ignore
+import numpy as np  # type: ignore
+from pyodide.ffi import create_proxy  # type: ignore
 
 class Drive:
     def set_speed_angle(self, speed, angle):
